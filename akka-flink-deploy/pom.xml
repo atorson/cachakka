@@ -1,0 +1,36 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>cachakka-parent</artifactId>
+        <groupId>com.cachakka.streaming</groupId>
+        <version>0.5.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>cachakka-akka-flink-deploy</artifactId>
+    <packaging>jar</packaging>
+    <name>Cachakka - Akka Flink Cluster Node</name>
+
+    <properties>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-metrics-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cachakka.streaming</groupId>
+            <artifactId>cachakka-akka</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+    </profiles>
+
+    <build>
+        <plugins>
+       </plugins>
+    </build>
+</project>

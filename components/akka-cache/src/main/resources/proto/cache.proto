@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package com.cachakka.streaming.akka.shard.cache;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/descriptor.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_outer_classname = "CacheInstrumentalMessagesJava";
+
+option(scalapb.options) = {
+ flat_package: true
+ single_file: true
+};
+
+// protobuf extension used to define secondary indexes to be built & maintained
+
+message CacheIndexesMeta {
+    string query_functions = 1;
+}
+
+extend google.protobuf.MessageOptions {
+    CacheIndexesMeta index = 50004;
+}
+
+// instrumental messages used by CacheShards and CacheConsumers to communicate with CacheRegistry
+
+enum CacheRegistryStatusEnum {
+    option (scalapb.enum_options).extends = "CacheRegistryStatus";
+
+    UNDEFINED = 0;
+    REGISTERING = 1 [(scalapb.enum_value).extends = "com.cachakka.streaming.akka.shard.cache.CacheStatusRegistering"];
+    SUBSCRIBED = 2 [(scalapb.enum_value).extends = "com.cachakka.streaming.akka.shard.cache.CacheStatusSubscribed"];
+    UNREGISTERING = 3 [(scalapb.enum_value).extends = "com.cachakka.streaming.akka.shard.cache.CacheStatusUnregistering"];
+    UNSUBSCRIBED = 4 [(scalapb.enum_value).extends = "com.cachakka.streaming.akka.shard.cache.CacheStatusUnsubscribed"];
+}
+
+message CacheConsumerRegistration {
+     option (scalapb.message).extends = "com.cachakka.streaming.akka.shard.cache.CacheConsumerRegistrationTrait";
+     option (scalapb.message).companion_extends = "com.cachakka.streaming.akka.shard.cache.CacheConsumerRegistrationCompanionTrait";
+     CacheRegistryStatusEnum status = 1;
+     string actor_path = 2;
+     string entity_fqn = 3;
+     string group_id = 4;
+     string hostname = 5;
+     int32 parallelism = 6;
+     int32 index = 7;
+}
+
+message CacheShardRegistration {
+    option (scalapb.message).extends = "com.cachakka.streaming.akka.shard.cache.CacheShardRegistrationTrait";
+    option (scalapb.message).companion_extends = "com.cachakka.streaming.akka.shard.cache.CacheShardRegistrationCompanionTrait";
+    CacheRegistryStatusEnum status = 1;
+    string entity_fqn = 2;
+    string shard_id = 3;
+    string hostname = 4;
+    int32 replica = 5;
+}
+
+message CacheShards {
+    repeated CacheShardRegistration shards = 1;
+}
+
+message CacheShardInfo {
+    option (scalapb.message).extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessage[GetCacheShardInfo]";
+    option (scalapb.message).companion_extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessageCompanion[CacheShardInfo]";
+    string entity_fqn = 1;
+    string hostname = 2;
+    map<string, CacheShards> shard_map = 3;
+}
+
+message CacheConsumerInfo {
+    option (scalapb.message).extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessage[GetCacheConsumerInfo]";
+    option (scalapb.message).companion_extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessageCompanion[CacheConsumerInfo]";
+    string entity_fqn = 1;
+    string hostname = 2;
+    repeated CacheConsumerRegistration consumers = 3;
+}
+
+message CacheShardAssignmentInfo {
+    option (scalapb.message).extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessage[GetCacheShardAssignmentInfo]";
+    option (scalapb.message).companion_extends = "com.cachakka.streaming.akka.shard.cache.CacheRegistryMonitoringMessageCompanion[CacheShardAssignmentInfo]";
+    string entity_fqn = 1;
+    string group_id = 2;
+    string hostname = 3;
+    map<string, CacheShards> assignment_map = 4;
+}
+
+
+

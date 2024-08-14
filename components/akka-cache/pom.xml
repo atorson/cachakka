@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>cachakka-components</artifactId>
+        <groupId>com.cachakka.streaming</groupId>
+        <version>0.5.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>cachakka-akka-cache</artifactId>
+    <packaging>jar</packaging>
+    <name>Cachakka - Akka Cache</name>
+
+    <properties>
+        <protoSourceFile>cache.proto</protoSourceFile>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <artifactId>cachakka-akka</artifactId>
+            <groupId>com.cachakka.streaming</groupId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>cachakka-akka-cdc</artifactId>
+            <groupId>com.cachakka.streaming</groupId>
+            <version>${project.parent.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--Add core.proto to the list of external Proto dependencies-->
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-and-rename-shared-proto-file</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <overWrite>true</overWrite>
+                            <sourceFile>${project.basedir}/src/main/resources/proto/${protoSourceFile}</sourceFile>
+                            <destinationFile>${includeProtoFolder}/cachakka/${protoSourceFile}</destinationFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

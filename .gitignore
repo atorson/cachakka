@@ -1,0 +1,23 @@
+#Vim temp files
+.*.swp
+
+#Eclipse files
+.classpath
+.project
+.settings/
+
+#IDEA files
+.idea
+*.iml
+
+#macOS stuff
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+#Generated files
+target/
+dependency-reduced-pom.xml
+

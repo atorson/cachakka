@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package com.cachakka.streaming.akka;
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/descriptor.proto";
+
+option java_outer_classname = "BaseAkkaClusterJava";
+
+option(scalapb.options) = {
+ flat_package: true
+ single_file: true
+};
+
+// Ack mesage used to send a positive confirmation directly back to sender
+message BaseAckMessage {
+    option (scalapb.message).extends = "AckMessage";
+    option (scalapb.message).extends = "AsyncAskMessage[BaseAckMessage]";
+    option (scalapb.message).companion_extends = "AckMessageCompanion";
+    string correlation_id = 1;
+}
+
+// Nack mesage used to send a neagtive acknoledgement directly back to sender
+message BaseNackMessage {
+    option (scalapb.message).extends = "NackMessage";
+    option (scalapb.message).extends = "AsyncAskMessage[BaseNackMessage]";
+    option (scalapb.message).companion_extends = "NackMessageCompanion";
+    string correlation_id = 1;
+    string exc_string = 2;
+}
+
+message GrpcCheckAlive{}
+
+message GrpcRestartShardingRegion{}
+
+
+service ServerHealthcheckApi {
+
+    // gRPC server pool heartbeat service used by the central service registry
+    rpc Ping (GrpcCheckAlive) returns (GrpcCheckAlive) {}
+}
+
+service ShardingRegionManagementApi {
+
+    // Service used to restart sharding region actors on a given node whenever they are unhealthy
+    rpc Restart (GrpcRestartShardingRegion) returns (GrpcRestartShardingRegion) {}
+}

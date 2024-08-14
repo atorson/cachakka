@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.cachakka.streaming.core;
+import "google/protobuf/descriptor.proto";
+import "scalapb/scalapb.proto";
+
+option java_outer_classname = "StreamingCoreJava";
+
+option(scalapb.options) = {
+ flat_package: true
+ single_file: true
+};
+
+extend google.protobuf.FieldOptions {
+    string ingress_json_name = 50003;
+}
